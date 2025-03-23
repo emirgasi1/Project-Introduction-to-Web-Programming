@@ -1,6 +1,6 @@
 /* PARALLAX SECTION */
 .parallax {
-    background-image: url('../assets/background.jpg'); /* Putanja do tvoje slike */
+    background-image: url('../assets/background.jpg'); 
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -216,10 +216,10 @@
 /* SPECIAL OF THE WEEK SECTION - CONTAINER */
 .special-container {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* dva jednaka stupca */
+    grid-template-columns: 1fr 1fr; 
     gap: 50px;
     padding: 50px;
-    max-width: 1500px; /* prilagodi po želji */
+    max-width: 1500px; 
     margin: 50px auto;
   }
   
@@ -234,7 +234,7 @@
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    width: 100%;  /* osigurava punu širinu stupca */
+    width: 100%;  
   }
   
   /* SPECIAL IMAGE */
@@ -243,7 +243,7 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    width: 100%;  /* osigurava punu širinu stupca */
+    width: 100%; 
   }
   
   .special-image img {
@@ -274,12 +274,12 @@
   
   /* Sadržaj se pozicionira na desnoj strani */
   .order-content {
-    margin-left: auto;   /* i dalje je blok na desnoj strani ekrana */
+    margin-left: auto; 
     max-width: 500px;
     padding: 40px;
     border-radius: 10px;
     color: white;
-    text-align: center;  /* sve unutar .order-content centrirano */
+    text-align: center;  
   }
   
   .order-content h2 {
@@ -316,8 +316,8 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center; /* Center text */
-        padding: 40px 20px; /* Adjust padding for better spacing */
+        text-align: center;
+        padding: 40px 20px; 
     }
 
     .parallax-content {
@@ -326,7 +326,7 @@
     }
 
     .small-text {
-        font-size: 40px; /* Smaller font on mobile */
+        font-size: 40px; 
         text-align: center;
     }
 
@@ -345,13 +345,13 @@
       flex-direction: column;
       gap: 20px;
       padding: 20px 0;
-      align-items: center; /* Centers all boxes */
+      align-items: center; 
   }
 
   .box {
-      width: 90%; /* Makes all boxes the same width */
-      max-width: 350px; /* Ensures consistency */
-      height: auto; /* Adjusts height dynamically */
+      width: 90%; 
+      max-width: 350px; 
+      height: auto; 
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -399,9 +399,9 @@
         font-size: 24px;
     }
 
-    /* SPECIAL OF THE WEEK SECTION: Convert grid to single column */
+    /* SPECIAL OF THE WEEK SECTION:*/
     .special-container {
-      grid-template-columns: 1fr; /* Single column layout */
+      grid-template-columns: 1fr; 
       gap: 20px;
       padding: 20px;
       max-width: 100%;
@@ -410,16 +410,16 @@
 
   .special-text,
   .special-image {
-      width: 100%; /* Makes both elements take full width */
-      max-width: 500px; /* Ensures a uniform width */
-      margin: 0 auto; /* Centers them properly */
+      width: 100%; 
+      max-width: 500px; 
+      margin: 0 auto;
       text-align: center;
   }
 
   .special-image img {
       width: 100%;
       height: auto;
-      max-width: 500px; /* Ensures image stays within bounds */
+      max-width: 500px; 
       border-radius: 10px;
   }
     /* ORDER BOX SECTION: CENTER TEXT */
@@ -428,8 +428,8 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center; /* Center text */
-        padding: 40px 20px; /* Adjust padding */
+        text-align: center; 
+        padding: 40px 20px; 
     }
 
     .order-content {
@@ -485,7 +485,7 @@
         .favorites-button {
           display: block;
           margin: 0 auto;
-          padding: 10px 20px; /* Adjust padding if needed */
-          font-size: 16px;    /* Optionally reduce font size */
+          padding: 10px 20px; 
+          font-size: 16px;    
         }
       }

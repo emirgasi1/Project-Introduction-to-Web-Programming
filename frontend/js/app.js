@@ -10,15 +10,15 @@ $(document).ready(function () {
       $(this).addClass('active');
   });
 
-  // **1. Učitaj stavke iz localStorage-a**
+  // **Učitaj stavke iz localStorage-a**
   let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // **2. Selektujemo elemente**
+  // ** Selektujemo elemente**
   const cartButtons = document.querySelectorAll(".Cart-Button");
   const cartDropdown = document.querySelector("#cartDropdown + .dropdown-menu");
   const cartCount = document.querySelector("#cart-count"); // Broj stavki u korpi
 
-  // **3. Funkcija za dodavanje proizvoda u korpu**
+  // **Funkcija za dodavanje proizvoda u korpu**
   function addToCart(event) {
       const dishBox = event.target.closest(".dish-box");
       const itemName = dishBox.querySelector("h3").textContent;
@@ -38,7 +38,7 @@ $(document).ready(function () {
       updateCartDropdown();
   }
 
-  // **4. Ažurira prikaz u cart dropdown meniju**
+  // **Ažurira prikaz u cart dropdown meniju**
   function updateCartDropdown() {
       cartDropdown.innerHTML = ""; // Brišemo prethodne stavke
 
@@ -58,14 +58,14 @@ $(document).ready(function () {
       });
   }
 
-  // **5. Dodaj event listener na dugmad "Put in Cart"**
+  // **Dodaj event listener na dugmad "Put in Cart"**
   cartButtons.forEach(button => {
       button.addEventListener("click", addToCart);
   });
 
-  // **6. Kada korisnik klikne na cart ikonu, ažuriraj dropdown**
+  // **Kada korisnik klikne na cart ikonu, ažuriraj dropdown**
   document.querySelector("#cartDropdown").addEventListener("click", updateCartDropdown);
 
-  // **7. Inicijalno ažuriraj korpu pri učitavanju stranice**
+  // **Inicijalno ažuriraj korpu pri učitavanju stranice**
   updateCartDropdown();
 });
