@@ -1,0 +1,303 @@
+/* RESET DEFAULT STYLES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* GLOBAL LAYOUT */
+  html, body {
+    background-color: #F9F2EA;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+  }
+  
+  /* WRAPPER */
+  
+  
+  /* NAVBAR */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;   
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding:  0; 
+    height: 80px;
+    line-height: 80px;
+  }
+  
+  
+  .navbar .container-fluid {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  
+  
+  
+  /* Brand (Sandwich Station) veći font */
+  .navbar-brand {
+    font-size: 30px; 
+    font-weight: bold;
+  }
+  
+  /* Linkovi u navigaciji - veći font */
+  .navbar-nav .nav-link {
+    font-size: 20px; 
+  }
+  
+  /* Ikonice (user, cart)*/
+  .navbar-nav .nav-link i {
+    font-size: 22px; 
+    margin-right: 5px; 
+  }
+  .navbar-nav .nav-item:not(:last-child) {
+    margin-right: 20px;
+  }
+  
+  /* CONTENT */
+  .content {
+    padding-top: 90px;  
+    padding-bottom: 80px; 
+  }
+  
+  /* GLOBAL CONTAINER */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px 20px;
+  }
+  
+  /* MAIN SPAPP */
+  main#spapp {
+    flex: 1;
+  }
+  
+  .site-footer {
+    background-color: #222;   
+    color: #ddd;             
+    padding: 30px 0;
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .footer-content {
+    text-align: center;
+  }
+  
+  .footer-content p {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  
+  .footer-social a {
+    margin: 0 10px;
+    color: #ddd;
+    font-size: 20px;
+    transition: color 0.3s;
+  }
+  
+  .footer-social a:hover {
+    color: #f1c40f;  
+  }
+  
+
+
+
+@media (max-width: 576px) {
+  body {
+    font-size: 14px; 
+  }
+  
+  h1 {
+    font-size: 32px;
+  }
+  
+  h2 {
+    font-size: 24px;
+  }
+  
+  h3 {
+    font-size: 20px;
+  }
+  
+  p,
+  .navbar-nav .nav-link,
+  .contact-title,
+  .login-title,
+  .signup-title,
+  .menu-title {
+    font-size: 14px;
+  }
+  
+  /* Navbar adjustments */
+  .navbar {
+    padding: 5px 0;
+  }
+  
+  .navbar .container,
+  .navbar .container-fluid {
+    padding: 0 20px;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 16px;
+  }
+  
+  /* Hamburger menu */
+  .navbar-collapse {
+    background-color: #fff;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+  }
+  
+  .navbar-collapse .nav-item {
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+  
+  .navbar-collapse .nav-item:hover {
+    border-color: #DD2803;
+    background-color: #fff;
+  }
+  
+
+  button {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+}
+
+
+@media (min-width: 768px)  and (max-width: 991px){
+ body {
+  font-size: 14px; 
+}
+
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+p,
+.navbar-nav .nav-link,
+.contact-title,
+.login-title,
+.signup-title,
+.menu-title {
+  font-size: 14px;
+}
+
+/* Navbar adjustments */
+.navbar {
+  padding: 5px 0;
+}
+
+.navbar .container,
+.navbar .container-fluid {
+  padding: 0 20px;
+}
+
+.navbar-nav .nav-link {
+  font-size: 16px;
+}
+
+/* Hamburger menu (collapsed navbar) as white box */
+.navbar-collapse {
+  background-color: #fff;
+  padding: 20px;
+  border-top: 1px solid #ccc;
+}
+
+.navbar-collapse .nav-item {
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.navbar-collapse .nav-item:hover {
+  border-color: #DD2803;
+  background-color: #fff;
+}
+
+button {
+  font-size: 16px;
+  padding: 8px 16px;
+}
+}
+
+
+@media (min-width: 992px) {
+  .navbar {
+    padding: 0 ; 
+  }
+  
+  
+  .navbar .container-fluid {
+    padding: 0 60px ;
+    align-items: center;
+  }
+  
+  .navbar-brand {
+    font-size: 28px; 
+    line-height: 1.2;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 18px;
+  }
+
+  .container {
+    max-width: 970px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar {
+    padding: 0 ;
+  }
+  
+  .navbar .container-fluid {
+    padding: 0 100px ;
+    align-items: center;
+  }
+  
+  .navbar-brand {
+    font-size: 30px; 
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 18px; 
+  }
+  
+  .container {
+    max-width: 1140px;
+  }
+  
+  .footer-container {
+    max-width: 1140px;
+  }
+}
