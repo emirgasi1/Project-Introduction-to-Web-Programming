@@ -27,7 +27,7 @@
   /* LOGIN TITLE */
   .login-title {
     font-size: 48px;
-    color: #DD2803; /* ista crvena boja */
+    color: #DD2803;
     text-align: left;
     margin-bottom: 30px;
   }
@@ -39,7 +39,7 @@
     gap: 20px;
   }
   
-  /* FORM GROUP (label + input) */
+  /* FORM GROUP */
   .form-group {
     display: flex;
     flex-direction: column;
