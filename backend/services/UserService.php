@@ -15,7 +15,10 @@ class UserService {
     public function getById($id) {
         return $this->dao->getById($id);
     }
-
+    public function getByEmail($email) {
+        return $this->dao->getByEmail($email);
+    }
+    
     public function create($data) {
         $this->validateUser($data);
         return $this->dao->create($data);

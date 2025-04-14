@@ -27,7 +27,7 @@ class UserDao {
         ]);
         return $this->db->lastInsertId();
     }
-    
+
     public function update($id, $data) {
         $stmt = $this->db->prepare("UPDATE users SET username = ?, email = ?, password_hash = ?, role = ? WHERE user_id = ?");
         return $stmt->execute([
@@ -38,10 +38,16 @@ class UserDao {
             $id
         ]);
     }
-    
 
     public function delete($id) {
         $stmt = $this->db->prepare("DELETE FROM users WHERE user_id = ?");
         return $stmt->execute([$id]);
+    }
+
+    // ✅ DODATO za login
+    public function getByEmail($email) {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
