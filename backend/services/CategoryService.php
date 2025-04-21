@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../dao/CategoryDao.php';
 
 class CategoryService {
@@ -17,10 +18,20 @@ class CategoryService {
     }
 
     public function create($data) {
+        // Validacija imena kategorije
+        if (empty($data['category_name'])) {
+            throw new Exception("Category name is required.");
+        }
+
         return $this->dao->create($data);
     }
 
     public function update($id, $data) {
+        // Validacija imena kategorije
+        if (empty($data['category_name'])) {
+            throw new Exception("Category name is required.");
+        }
+
         return $this->dao->update($id, $data);
     }
 
@@ -28,4 +39,3 @@ class CategoryService {
         return $this->dao->delete($id);
     }
 }
-?>

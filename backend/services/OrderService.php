@@ -17,11 +17,31 @@ class OrderService {
     }
 
     public function create($data) {
+        // Provjeri postoji li korisnik s user_id
+        $userService = new UserService($GLOBALS['db']);
+        $user = $userService->getById($data['user_id']);
+        if (!$user) {
+            throw new Exception("User not found.");
+        }
+    
         $this->validateOrder($data);
         return $this->dao->create($data);
     }
 
     public function update($id, $data) {
+        // Provjera postoji li narudžba
+        $order = $this->dao->getById($id);
+        if (!$order) {
+            throw new Exception("Order not found.");
+        }
+    
+        // Provjeri da li je korisnik valjan
+        $userService = new UserService($GLOBALS['db']);
+        $user = $userService->getById($data['user_id']);
+        if (!$user) {
+            throw new Exception("User not found.");
+        }
+    
         $this->validateOrder($data);
         return $this->dao->update($id, $data);
     }

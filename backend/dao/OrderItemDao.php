@@ -7,12 +7,12 @@ class OrderItemDao {
     }
 
     public function getAll() {
-        $stmt = $this->db->query("SELECT * FROM order_items");
+        $stmt = $this->db->query("SELECT oi.*, p.product_name FROM order_items oi LEFT JOIN products p ON oi.product_id = p.product_id");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getById($id) {
-        $stmt = $this->db->prepare("SELECT * FROM order_items WHERE order_item_id = ?");
+        $stmt = $this->db->prepare("SELECT oi.*, p.product_name FROM order_items oi LEFT JOIN products p ON oi.product_id = p.product_id WHERE order_item_id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -20,10 +20,10 @@ class OrderItemDao {
     public function create($data) {
         $stmt = $this->db->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
         $stmt->execute([
-            $data['order_id'],
-            $data['product_id'],
-            $data['quantity'],
-            $data['price']
+            $data['order_id'],   // Order ID
+            $data['product_id'], // Product ID
+            $data['quantity'],   // Quantity
+            $data['price']       // Price
         ]);
         return $this->db->lastInsertId();
     }
@@ -44,4 +44,5 @@ class OrderItemDao {
         return $stmt->execute([$id]);
     }
 }
+
 ?>

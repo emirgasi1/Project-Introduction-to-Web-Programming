@@ -6,18 +6,8 @@ class PaymentDao {
         $this->db = $db;
     }
 
-    public function getAll() {
-        $stmt = $this->db->query("SELECT * FROM payments");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getById($id) {
-        $stmt = $this->db->prepare("SELECT * FROM payments WHERE payment_id = ?");
-        $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
     public function create($data) {
+        // Provjera postojanja order_id je već izvedena u PaymentService
         $stmt = $this->db->prepare("INSERT INTO payments (order_id, payment_method, payment_status, payment_date) VALUES (?, ?, ?, NOW())");
         $stmt->execute([
             $data['order_id'],
@@ -41,4 +31,16 @@ class PaymentDao {
         $stmt = $this->db->prepare("DELETE FROM payments WHERE payment_id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function getAll() {
+        $stmt = $this->db->query("SELECT * FROM payments");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM payments WHERE payment_id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
+
