@@ -1,46 +1,17 @@
 <?php
-// backend/dao/OrderDao.php
-class OrderDao {
-    private $db;
+require_once __DIR__ . '/BaseDAO.php';
 
-    public function __construct($db) {
-        $this->db = $db;
+class OrderDao extends BaseDAO {
+    protected function tableName(): string {
+        return 'orders';
     }
 
-    public function getAll() {
-        $stmt = $this->db->query("SELECT * FROM orders");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    protected function primaryKey(): string {
+        return 'order_id';
     }
 
-    public function getById($id) {
-        $stmt = $this->db->prepare("SELECT * FROM orders WHERE order_id = ?");
-        $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function create($data) {
-        $stmt = $this->db->prepare("INSERT INTO orders (user_id, total_price, status, order_date) VALUES (?, ?, ?, NOW())");
-        $stmt->execute([
-            $data['user_id'],
-            $data['total_price'],
-            $data['status']
-        ]);
-        return $this->db->lastInsertId();
-    }
-
-    public function update($id, $data) {
-        $stmt = $this->db->prepare("UPDATE orders SET user_id = ?, total_price = ?, status = ? WHERE order_id = ?");
-        return $stmt->execute([
-            $data['user_id'],
-            $data['total_price'],
-            $data['status'],
-            $id
-        ]);
-    }
-
-    public function delete($id) {
-        $stmt = $this->db->prepare("DELETE FROM orders WHERE order_id = ?");
-        return $stmt->execute([$id]);
+    protected function columns(): array {
+        // ovdje navodimo samo one kolone koje BaseDAO koristi za INSERT/UPDATE
+        return ['user_id', 'total_price', 'status'];
     }
 }
-?>

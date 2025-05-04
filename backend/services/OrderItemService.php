@@ -1,58 +1,48 @@
 <?php
+require_once __DIR__ . '/BaseService.php';
 require_once __DIR__ . '/../dao/OrderItemDao.php';
-class OrderItemService {
-    private $dao;
+require_once __DIR__ . '/OrderService.php';
+require_once __DIR__ . '/ProductService.php';
 
-    public function __construct($db) {
-        $this->dao = new OrderItemDao($db);
+class OrderItemService extends BaseService {
+    private PDO $db;
+
+    public function __construct(PDO $db) {
+        $this->db  = $db;
+        $dao       = new OrderItemDao($db);
+        parent::__construct($dao);
     }
 
-    public function getAll() {
-        return $this->dao->getAll();
-    }
-
-    public function getById($id) {
-        return $this->dao->getById($id);
-    }
-
-    public function create($data) {
-        // Provjeri da li narudžba postoji
-        $orderService = new OrderService($GLOBALS['db']);
-        $order = $orderService->getById($data['order_id']);
-        if (!$order) {
+    public function create(array $data): int {
+        // 1) Provjera postoji li narudžba
+        $orderService = new OrderService($this->db);
+        if (!$orderService->getById((int)$data['order_id'])) {
             Flight::halt(400, "Order not found.");
         }
-
-        // Provjeri da li proizvod postoji
-        $productService = new ProductService($GLOBALS['db']);
-        $product = $productService->getById($data['product_id']);
-        if (!$product) {
+        // 2) Provjera postoji li proizvod
+        $productService = new ProductService($this->db);
+        if (!$productService->getById((int)$data['product_id'])) {
             Flight::halt(400, "Product not found.");
         }
-
-        return $this->dao->create($data);
+        // 3) Kreiraj zapis
+        return parent::create($data);
     }
 
-    public function update($id, $data) {
-        // Provjeri da li narudžba i proizvod postoje
-        $orderService = new OrderService($GLOBALS['db']);
-        $order = $orderService->getById($data['order_id']);
-        if (!$order) {
+    public function update(int $id, array $data): bool {
+        // 1) Provjeri da li item postoji
+        if (!$this->getById($id)) {
+            Flight::halt(404, "Order item not found.");
+        }
+        // 2) Provjera narudžbe i proizvoda
+        $orderService = new OrderService($this->db);
+        if (!$orderService->getById((int)$data['order_id'])) {
             Flight::halt(400, "Order not found.");
         }
-
-        $productService = new ProductService($GLOBALS['db']);
-        $product = $productService->getById($data['product_id']);
-        if (!$product) {
+        $productService = new ProductService($this->db);
+        if (!$productService->getById((int)$data['product_id'])) {
             Flight::halt(400, "Product not found.");
         }
-
-        return $this->dao->update($id, $data);
-    }
-
-    public function delete($id) {
-        return $this->dao->delete($id);
+        // 3) Ažuriraj zapis
+        return parent::update($id, $data);
     }
 }
-
-?>
