@@ -31,7 +31,7 @@ Flight::route('GET /users', function() {
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="User found"
+ *         description="User data"
  *     )
  * )
  */
@@ -48,10 +48,11 @@ Flight::route('GET /users/@id', function($id) {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"username", "email", "password"},
+ *             required={"username", "email", "password_hash", "role"},
  *             @OA\Property(property="username", type="string", example="john_doe"),
  *             @OA\Property(property="email", type="string", example="john@example.com"),
- *             @OA\Property(property="password", type="string", example="secure123")
+ *             @OA\Property(property="password_hash", type="string", example="securepassword123"),
+ *             @OA\Property(property="role", type="string", example="user")
  *         )
  *     ),
  *     @OA\Response(
@@ -80,9 +81,10 @@ Flight::route('POST /users', function() {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="username", type="string", example="updated_user"),
- *             @OA\Property(property="email", type="string", example="updated@example.com"),
- *             @OA\Property(property="password", type="string", example="newpassword123")
+ *             @OA\Property(property="username", type="string", example="john_updated"),
+ *             @OA\Property(property="email", type="string", example="john_updated@example.com"),
+ *             @OA\Property(property="password_hash", type="string", example="newpassword123"),
+ *             @OA\Property(property="role", type="string", example="admin")
  *         )
  *     ),
  *     @OA\Response(

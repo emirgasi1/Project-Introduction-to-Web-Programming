@@ -56,11 +56,16 @@
     font-size: 20px; 
   }
   
-  /* Ikonice (user, cart)*/
-  .navbar-nav .nav-link i {
-    font-size: 22px; 
-    margin-right: 5px; 
-  }
+/* Izbriši broj u navbaru pored ikone korpe */
+.navbar-nav .nav-link #cart-count {
+  display: none;  /* Skriva broj proizvoda u korpi */
+}
+
+/* Koristi samo ikonu korpe */
+.navbar-nav .nav-link i {
+  font-size: 22px;  /* Postavi veličinu ikone korpe */
+  margin-right: 0; /* Ukloni marginu sa desne strane */
+}
   .navbar-nav .nav-item:not(:last-child) {
     margin-right: 20px;
   }

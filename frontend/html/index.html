@@ -50,14 +50,21 @@
             <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
             <li class="nav-item"><a class="nav-link" href="#login"><i class="fa-solid fa-user"></i>Log In</a></li>
             <!-- Ikona korpe s dropdown menijem-->
+            <!-- Navbar korpa -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown">
                 <i class="fa-solid fa-cart-shopping"></i> <span id="cart-count">(0)</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown">
-                <li><span class="dropdown-item">Your Cart is Empty</span></li>
+                <div id="cart-items">
+                  <!-- Proizvodi u korpi će biti prikazani ovdje -->
+                </div>
+                <div class="cart-total">
+                  <h4>Total: <span id="cart-total">$0.00</span></h4>
+                </div>
               </ul>
             </li>
+              
           </ul>
         </div>
       </div>
@@ -80,6 +87,8 @@
   <script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/jquery.spapp.js"></script>
   <script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/custom.js"></script>
   <script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/app.js"></script>
+  <script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/products.js"></script> <!-- Dodano products.js -->
+
   <!-- Bootstrap Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
