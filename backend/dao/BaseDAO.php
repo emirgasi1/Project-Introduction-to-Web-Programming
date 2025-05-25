@@ -6,20 +6,20 @@ abstract class BaseDao {
         $this->db = $db;
     }
 
-    /** Ime tabele, npr. "categories" */
     abstract protected function tableName(): string;
 
-    /** Primarni ključ, npr. "category_id" */
     abstract protected function primaryKey(): string;
 
-    /** Kolone za INSERT/UPDATE (bez primarnog ključa i bez automatskih timestamp-ova) */
     abstract protected function columns(): array;
 
     public function getAll(): array {
-        $sql = "SELECT * FROM {$this->tableName()}";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $this->db->query("SELECT * FROM {$this->tableName()}");
+    if ($stmt === false) {
+        return [];
     }
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     public function getById(int $id): ?array {
         $sql = "SELECT * FROM {$this->tableName()} WHERE {$this->primaryKey()} = ?";
@@ -52,21 +52,29 @@ abstract class BaseDao {
         return (int)$this->db->lastInsertId();
     }
 
-    public function update(int $id, array $data): bool {
-        $cols = $this->columns();
-        $sets = [];
-        $values = [];
-        foreach ($cols as $col) {
-            if (!array_key_exists($col, $data)) {
-                throw new InvalidArgumentException("Missing required field: $col");
-            }
+   public function update(int $id, array $data): bool {
+    $cols = $this->columns();
+
+    // Filter samo kolone koje postoje u $data
+    $sets = [];
+    $values = [];
+    foreach ($cols as $col) {
+        if (array_key_exists($col, $data)) {
             $sets[] = "$col = ?";
             $values[] = $data[$col];
         }
-        $values[] = $id;
-        $setList = implode(', ', $sets);
-        $sql = "UPDATE {$this->tableName()} SET $setList WHERE {$this->primaryKey()} = ?";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute($values);
     }
+
+    if (empty($sets)) {
+        // Nema šta da se updateuje, vrati false ili baci grešku
+        throw new InvalidArgumentException("No fields to update.");
+    }
+
+    $values[] = $id;
+    $setList = implode(', ', $sets);
+    $sql = "UPDATE {$this->tableName()} SET $setList WHERE {$this->primaryKey()} = ?";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute($values);
+}
+
 }

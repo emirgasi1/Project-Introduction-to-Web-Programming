@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../services/PaymentService.php';
 
 /**
@@ -13,8 +14,15 @@ require_once __DIR__ . '/../services/PaymentService.php';
  * )
  */
 Flight::route('GET /payments', function() {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
     $service = new PaymentService($GLOBALS['db']);
-    Flight::json($service->getAll());
+    if ($user['role'] === 'admin') {
+        Flight::json($service->getAll());
+    } else {
+        Flight::json($service->getByUserId($user['user_id']));
+    }
 });
 
 /**
@@ -35,8 +43,17 @@ Flight::route('GET /payments', function() {
  * )
  */
 Flight::route('GET /payments/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
     $service = new PaymentService($GLOBALS['db']);
-    Flight::json($service->getById($id));
+    $payment = $service->getById($id);
+    if (!$payment) throw new Exception("Payment not found.", 404);
+
+    if ($user['role'] !== 'admin' && $payment['user_id'] !== $user['user_id']) {
+        throw new Exception("Forbidden.", 403);
+    }
+    Flight::json($payment);
 });
 
 /**
@@ -59,10 +76,15 @@ Flight::route('GET /payments/@id', function($id) {
  *     )
  * )
  */
+
 Flight::route('POST /payments', function() {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $data = Flight::request()->data->getData();
     $service = new PaymentService($GLOBALS['db']);
-    Flight::json($service->create($data));
+    $id = $service->create($data);
+    Flight::halt(201, json_encode(['payment_id' => $id]));
 });
 
 /**
@@ -91,9 +113,14 @@ Flight::route('POST /payments', function() {
  * )
  */
 Flight::route('PUT /payments/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $data = Flight::request()->data->getData();
     $service = new PaymentService($GLOBALS['db']);
-    Flight::json($service->update($id, $data));
+    $updated = $service->update($id, $data);
+    if (!$updated) throw new Exception("Payment not found.", 404);
+    Flight::json(['updated' => true]);
 });
 
 /**
@@ -114,6 +141,11 @@ Flight::route('PUT /payments/@id', function($id) {
  * )
  */
 Flight::route('DELETE /payments/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $service = new PaymentService($GLOBALS['db']);
-    Flight::json($service->delete($id));
+    $deleted = $service->delete($id);
+    if (!$deleted) throw new Exception("Payment not found.", 404);
+    Flight::json(['deleted' => true]);
 });

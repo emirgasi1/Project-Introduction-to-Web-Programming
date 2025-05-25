@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../services/OrderService.php';
 
 /**
@@ -13,8 +14,24 @@ require_once __DIR__ . '/../services/OrderService.php';
  * )
  */
 Flight::route('GET /orders', function() {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
+    if (!isset($user['role'])) {
+        throw new Exception("Unauthorized", 401);
+    }
+
     $service = new OrderService($GLOBALS['db']);
-    Flight::json($service->getAll());
+    if ($user['role'] === 'admin') {
+        $result = $service->getAll();
+    } else {
+        $result = $service->getByUserId($user['user_id']);
+    }
+
+    if (!is_array($result)) {
+        $result = [];
+    }
+    Flight::json($result);
 });
 
 /**
@@ -35,10 +52,20 @@ Flight::route('GET /orders', function() {
  * )
  */
 Flight::route('GET /orders/@id', function($id) {
-    $service = new OrderService($GLOBALS['db']);
-    Flight::json($service->getById($id));
-});
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
 
+    $service = new OrderService($GLOBALS['db']);
+    $order = $service->getById($id);
+
+    if (!$order) throw new Exception("Order not found.", 404);
+
+    if ($user['role'] !== 'admin' && $order['user_id'] !== $user['user_id']) {
+        throw new Exception("Forbidden.", 403);
+    }
+
+    Flight::json($order);
+});
 /**
  * @OA\Post(
  *     path="/orders",
@@ -50,20 +77,38 @@ Flight::route('GET /orders/@id', function($id) {
  *             required={"user_id", "total_price", "status"},
  *             @OA\Property(property="user_id", type="integer", example=1),
  *             @OA\Property(property="total_price", type="number", format="float", example=29.99),
- *             @OA\Property(property="status", type="string", example="pending")
+ *             @OA\Property(property="status", type="string", example="pending"),
+ *             @OA\Property(property="order_date", type="string", format="date", example="2025-05-23")
  *         )
  *     ),
  *     @OA\Response(
- *         response=200,
+ *         response=201,
  *         description="Order created"
  *     )
  * )
  */
 Flight::route('POST /orders', function() {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
     $data = Flight::request()->data->getData();
+
+    if ($user['role'] !== 'admin') {
+        $data['user_id'] = $user['user_id'];
+    }
+
+    if (!isset($data['user_id'], $data['total_price'], $data['status'])) {
+        throw new Exception("Missing required fields: user_id, total_price, status", 400);
+    }
+    if (!isset($data['order_date']) || !$data['order_date']) {
+        $data['order_date'] = date('Y-m-d');
+    }
+
     $service = new OrderService($GLOBALS['db']);
-    Flight::json($service->create($data));
+    $id = $service->create($data);
+    Flight::halt(201, json_encode(['order_id' => $id]));
 });
+
 
 /**
  * @OA\Put(
@@ -81,7 +126,8 @@ Flight::route('POST /orders', function() {
  *         @OA\JsonContent(
  *             @OA\Property(property="user_id", type="integer", example=1),
  *             @OA\Property(property="total_price", type="number", format="float", example=49.99),
- *             @OA\Property(property="status", type="string", example="completed")
+ *             @OA\Property(property="status", type="string", example="completed"),
+ *             @OA\Property(property="order_date", type="string", format="date", example="2025-05-23")
  *         )
  *     ),
  *     @OA\Response(
@@ -91,9 +137,15 @@ Flight::route('POST /orders', function() {
  * )
  */
 Flight::route('PUT /orders/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $data = Flight::request()->data->getData();
     $service = new OrderService($GLOBALS['db']);
-    Flight::json($service->update($id, $data));
+    $updated = $service->update($id, $data);
+
+    if (!$updated) throw new Exception("Order not found.", 404);
+    Flight::json(['updated' => true]);
 });
 
 /**
@@ -114,6 +166,12 @@ Flight::route('PUT /orders/@id', function($id) {
  * )
  */
 Flight::route('DELETE /orders/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $service = new OrderService($GLOBALS['db']);
-    Flight::json($service->delete($id));
+    $deleted = $service->delete($id);
+
+    if (!$deleted) throw new Exception("Order not found.", 404);
+    Flight::json(['deleted' => true]);
 });

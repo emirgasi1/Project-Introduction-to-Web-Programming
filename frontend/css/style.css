@@ -1,23 +1,5 @@
-/* RESET DEFAULT STYLES */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* GLOBAL LAYOUT */
-  html, body {
-    background-color: #F9F2EA;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-  }
-  
-  /* WRAPPER */
-  
-  
-  /* NAVBAR */
-  .navbar {
+/* NAVBAR SVI LINKOVI ISTE VISINE, ISTI FONT, PORAVNATI */
+.navbar {
     position: fixed;
     top: 0;
     left: 0;
@@ -26,13 +8,12 @@
     z-index: 1000;
     background-color: rgba(255, 255, 255, 0.9);
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    padding:  0; 
-    height: 80px;
+    padding: 0;
     line-height: 80px;
-  }
-  
-  
-  .navbar .container-fluid {
+}
+
+.navbar .container,
+.navbar .container-fluid {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
@@ -40,89 +21,59 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  
-  
-  
-  /* Brand (Sandwich Station) veći font */
-  .navbar-brand {
+}
+
+.navbar-brand {
     font-size: 30px; 
     font-weight: bold;
-  }
-  
-  /* Linkovi u navigaciji - veći font */
-  .navbar-nav .nav-link {
-    font-size: 20px; 
-  }
-  
-/* Izbriši broj u navbaru pored ikone korpe */
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center !important;
+    gap: 16px;
+}
+
+.navbar-nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-link {
+    margin: 0 ;
+    padding: 0 ;
+    height: 80px ;
+    display: flex !important;
+    align-items: center !important;
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    color: #444 !important;
+    line-height: 80px !important;
+    background: none;
+    border: none;
+    box-shadow: none ;
+    transition: color 0.2s;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #DD2803 !important;  /* Hover i aktivni na crveno */
+    text-decoration: underline;
+}
+
+
+
+.navbar-nav .nav-link .fa-cart-shopping {
+    margin-right: 0;
+    font-size: 22px;
+}
+
 .navbar-nav .nav-link #cart-count {
-  display: none;  /* Skriva broj proizvoda u korpi */
+    display: none;
 }
-
-/* Koristi samo ikonu korpe */
-.navbar-nav .nav-link i {
-  font-size: 22px;  /* Postavi veličinu ikone korpe */
-  margin-right: 0; /* Ukloni marginu sa desne strane */
+.content {
+    padding-top: 100px !important;  /* ili tačno koliko ti je visok navbar (80px + 20px extra radi margina/paddings) */
 }
-  .navbar-nav .nav-item:not(:last-child) {
-    margin-right: 20px;
-  }
-  
-  /* CONTENT */
-  .content {
-    padding-top: 90px;  
-    padding-bottom: 80px; 
-  }
-  
-  /* GLOBAL CONTAINER */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 50px 20px;
-  }
-  
-  /* MAIN SPAPP */
-  main#spapp {
-    flex: 1;
-  }
-  
-  .site-footer {
-    background-color: #222;   
-    color: #ddd;             
-    padding: 30px 0;
-  }
-  
-  .footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-  
-  .footer-content {
-    text-align: center;
-  }
-  
-  .footer-content p {
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  
-  .footer-social a {
-    margin: 0 10px;
-    color: #ddd;
-    font-size: 20px;
-    transition: color 0.3s;
-  }
-  
-  .footer-social a:hover {
-    color: #f1c40f;  
-  }
-  
-
-
-
 @media (max-width: 576px) {
   body {
     font-size: 14px; 

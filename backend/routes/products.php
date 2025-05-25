@@ -14,6 +14,7 @@ require_once __DIR__ . '/../services/ProductService.php';
  * )
  */
 Flight::route('GET /products', function() {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
     $service = new ProductService($GLOBALS['db']);
     Flight::json($service->getAll());
 });
@@ -36,8 +37,11 @@ Flight::route('GET /products', function() {
  * )
  */
 Flight::route('GET /products/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
     $service = new ProductService($GLOBALS['db']);
-    Flight::json($service->getById($id));
+    $product = $service->getById($id);
+    if (!$product) throw new Exception("Product not found.", 404);
+    Flight::json($product);
 });
 
 /**
@@ -63,10 +67,15 @@ Flight::route('GET /products/@id', function($id) {
  * )
  */
 Flight::route('POST /products', function() {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    Flight::auth_middleware()->authorizeRoles(['admin']);
+
     $data = Flight::request()->data->getData();
     $service = new ProductService($GLOBALS['db']);
-    Flight::json($service->create($data));
+    $id = $service->create($data);
+    Flight::halt(201, json_encode(['product_id' => $id]));
 });
+
 
 /**
  * @OA\Put(
@@ -96,9 +105,14 @@ Flight::route('POST /products', function() {
  * )
  */
 Flight::route('PUT /products/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    Flight::auth_middleware()->authorizeRoles(['admin']);
+
     $data = Flight::request()->data->getData();
     $service = new ProductService($GLOBALS['db']);
-    Flight::json($service->update($id, $data));
+    $updated = $service->update($id, $data);
+    if (!$updated) throw new Exception("Product not found.", 404);
+    Flight::json(['updated' => true]);
 });
 
 /**
@@ -119,6 +133,11 @@ Flight::route('PUT /products/@id', function($id) {
  * )
  */
 Flight::route('DELETE /products/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    Flight::auth_middleware()->authorizeRoles(['admin']);
+
     $service = new ProductService($GLOBALS['db']);
-    Flight::json($service->delete($id));
+    $deleted = $service->delete($id);
+    if (!$deleted) throw new Exception("Product not found.", 404);
+    Flight::json(['deleted' => true]);
 });

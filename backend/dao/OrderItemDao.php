@@ -1,5 +1,4 @@
 <?php
-// backend/dao/OrderItemDao.php
 
 require_once __DIR__ . '/BaseDAO.php';
 
@@ -12,12 +11,10 @@ class OrderItemDao extends BaseDAO {
         return 'order_item_id';
     }
 
-    // Kolone koje BaseDAO koristi za INSERT/UPDATE
     protected function columns(): array {
         return ['order_id', 'product_id', 'quantity', 'price'];
     }
 
-    // Override getAll da dohvaća i product_name
     public function getAll(): array {
         $sql = "SELECT oi.*, p.product_name
                   FROM order_items oi

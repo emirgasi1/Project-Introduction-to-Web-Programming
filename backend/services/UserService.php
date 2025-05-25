@@ -6,15 +6,18 @@ class UserService extends BaseService {
     private PDO $db;
 
     public function __construct(PDO $db) {
-        $this->db  = $db;                  // sačuvaj PDO ako ti treba za validaciju
-        $dao       = new UserDao($db);     // kreiraj DAO
-        parent::__construct($dao);         // proslijedi DAO BaseService-u
+        $this->db  = $db;                 
+        $dao       = new UserDao($db);     
+        parent::__construct($dao);       
     }
 
     public function create(array $data): int {
+        if (empty($data['role'])) {
+    $data['role'] = 'user';
+}
+
         $this->validateUser($data);
 
-        // hashiraj lozinku prije spremanja
         $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
         unset($data['password']);
 
@@ -22,20 +25,37 @@ class UserService extends BaseService {
     }
 
     public function update(int $id, array $data): bool {
-        // prvo provjeri da li postoji
-        if (!$this->getById($id)) {
-            Flight::halt(404, "User not found.");
-        }
-
-        $this->validateUser($data);
-
-        if (isset($data['password'])) {
-            $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
-            unset($data['password']);
-        }
-
-        return parent::update($id, $data);
+    $currentUser = $this->getById($id);
+    if (!$currentUser) {
+        Flight::halt(404, "User not found.");
     }
+    if (empty($data['role'])) {
+        $data['role'] = 'user';
+    }
+
+    $this->validateUser(array_merge($currentUser, $data));
+
+    // Ako je password poslan, hashiraj ga, ako nije, koristi postojeći hash
+    if (isset($data['password']) && strlen($data['password']) > 0) {
+        $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        unset($data['password']);
+    } else {
+        // Postavi stari hash iz baze!
+        $data['password_hash'] = $currentUser['password_hash'];
+    }
+
+    // Ovo osigurava da uvijek šalješ sve potrebne kolone (username, email, role, password_hash)
+    $updateData = [
+        'username'      => $data['username']      ?? $currentUser['username'],
+        'email'         => $data['email']         ?? $currentUser['email'],
+        'role'          => $data['role']          ?? $currentUser['role'],
+        'password_hash' => $data['password_hash']
+    ];
+
+    return parent::update($id, $updateData);
+}
+
+
 
     private function validateUser(array $data): void {
         if (!isset($data['username']) || strlen($data['username']) < 3) {
@@ -47,9 +67,10 @@ class UserService extends BaseService {
         if (isset($data['password']) && strlen($data['password']) < 6) {
             Flight::halt(400, "Password must be at least 6 characters.");
         }
-        $validRoles = ['user','admin'];
+        $validRoles = ['customer', 'admin'];
         if (!isset($data['role']) || !in_array($data['role'], $validRoles)) {
-            Flight::halt(400, "Role must be 'user' or 'admin'.");
+            Flight::halt(400, "Role must be 'customer' or 'admin'.");
         }
+
     }
 }
