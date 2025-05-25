@@ -6,13 +6,12 @@ $(document).ready(function () {
     });
 
 
-    // ===== SPA INIT =====
     $("main#spapp > section").height($(document).height() - 60);
 
     var app = $.spapp({ pageNotFound: 'error_404' });
     app.run();
 
-    // ===== LOGIN HANDLER (SPA FRIENDLY) =====
+    //LOGIN HANDLER 
     $(document).on("submit", "#loginForm", function (event) {
         event.preventDefault();
 
@@ -26,11 +25,11 @@ $(document).ready(function () {
             data: JSON.stringify({ email: email, password: password }),
             success: function (response) {
                 if (response.data && response.data.token) {
-                    // Ako je podaci u response.data, koristi to!
                     localStorage.setItem('user_token', response.data.token);
-                    localStorage.setItem('user_role', response.data.role || response.data.user?.role); // fallback ako promijeniš backend!
+                    localStorage.setItem('user_role', response.data.role || response.data.user?.role); 
                     localStorage.setItem('user_name', response.data.username || response.data.user?.username);
                     localStorage.setItem('user_email', response.data.email || response.data.user?.email);
+                    localStorage.setItem('user_id', response.data.user_id);
 
                     updateNavbar();
                     alert('Login successful!');
@@ -45,7 +44,7 @@ $(document).ready(function () {
         });
     });
 
-    // ===== SIGNUP HANDLER (SPA FRIENDLY, DELEGATION) =====
+    //SIGNUP HANDLER
     $(document).on("submit", "#signupForm", function(e) {
         e.preventDefault();
 
@@ -74,7 +73,7 @@ $(document).ready(function () {
         });
     });
 
-    // ===== ROLE-BASED NAVBAR UPDATE =====
+    //ROLE-BASED NAVBAR UPDATE
     function updateNavbar() {
         const role = localStorage.getItem('user_role');
         
@@ -93,7 +92,6 @@ $(document).ready(function () {
 
 
 $(document).on("spapp:afterLoad", function (e, page) {
-    // Dashboard
    if (page === "dashboard" || page === "#dashboard") {
     let username = localStorage.getItem('user_name');
     $("#welcome-message").text("Welcome, " + username + "!");
@@ -112,7 +110,6 @@ $(document).on("spapp:afterLoad", function (e, page) {
     });
   }
 
-    // Profile
     if (page === "#profile" || page === "profile") {
         let username = localStorage.getItem('user_name');
         let email = localStorage.getItem('user_email');
@@ -129,7 +126,7 @@ $(document).on("spapp:afterLoad", function (e, page) {
 });
 
 
-    // ==== LOGOUT HANDLER ====
+    //LOGOUT HANDLER 
     $(document).on('click', '.logout-link', function(e) {
         e.preventDefault();
         localStorage.clear();
@@ -137,41 +134,34 @@ $(document).on("spapp:afterLoad", function (e, page) {
         window.location.href = "#login";
     });
 
-    // Pozovi odmah na load i nakon logina/logouda
     updateNavbar();
-    // (Pozivaj i na svaku SPA promjenu ili gdje trebaš)
 });
 
-// ===== SPA VIEW USER INFO HANDLER =====
+//SPA VIEW USER INFO HANDLER
 function fillUserInfoOnSPAView(viewName) {
     let username = localStorage.getItem('user_name');
     let email = localStorage.getItem('user_email');
     let role = localStorage.getItem('user_role');
 
-    // Dashboard
     if (viewName === "dashboard") {
         $("#welcome-message").text("Welcome, " + (username || "User") + "!");
         $("#user-email").text(email || "");
         $("#user-role").text(role || "");
     }
-    // Profile
     if (viewName === "profile") {
         $("#profile-name").text(username || "");
         $("#profile-email").text(email || "");
         $("#profile-role").text(role || "");
     }
-    // Admin
     if (viewName === "admin") {
         $("#admin-name").text(username || "");
         $("#admin-email").text(email || "");
     }
 }
 
-// Prvi load odmah popuni info ako je hash već postavljen
 const firstHash = window.location.hash.replace('#', '');
 fillUserInfoOnSPAView(firstHash);
 
-// Svaki put kad user promijeni stranicu (hash), update user info!
 $(window).on("hashchange", function() {
     const hash = window.location.hash.replace('#', '');
     fillUserInfoOnSPAView(hash);
