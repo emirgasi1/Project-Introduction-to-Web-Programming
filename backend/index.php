@@ -5,7 +5,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// Onda sve require_once dalje...
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/middleware/AuthMiddleware.php';  
 require_once __DIR__ . '/services/AuthService.php';  
@@ -18,19 +17,17 @@ require_once __DIR__ . '/routes/order-items.php';
 require_once __DIR__ . '/routes/payments.php';
 require_once __DIR__ . '/routes/users.php';
 
-// Registruj middleware u FlightPHP
 Flight::register('auth_service', 'AuthService');
 Flight::register('auth_middleware', 'AuthMiddleware');
 
-// Zaštiti sve rute, osim login i register
 Flight::route('/*', function() {
-    $url = Flight::request()->url;  // dodaj ovu liniju
+    $url = Flight::request()->url;  
 
     if (strpos($url, '/auth/login') === 0 || strpos($url, '/auth/register') === 0 || strpos($url, '/swagger') === 0) {
         return TRUE;
     } else {
         try {
-            // Uzimamo token iz zaglavlja "Authorization"
+          
             $token = Flight::request()->getHeader("Authentication");
             if (Flight::auth_middleware()->verifyToken($token)) {
                 return TRUE;
@@ -43,10 +40,9 @@ Flight::route('/*', function() {
 Flight::map('error', function (Throwable $ex) {
     $code = $ex->getCode();
     if ($code < 400 || $code >= 600) {
-        $code = 500; // Default na 500 ako nije validan HTTP kod
+        $code = 500; 
     }
 
-    // Opcionalno: možeš logovati greške ovdje
 
     Flight::json([
         'error' => true,
