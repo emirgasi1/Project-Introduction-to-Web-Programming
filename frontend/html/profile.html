@@ -1,0 +1,25 @@
+<section class="profile-section">
+  <div class="profile-container">
+    <h1>My Profile</h1>
+    <div class="profile-info" id="profile-display">
+      <p><strong>Name:</strong> <span id="profile-name"></span></p>
+      <p><strong>Email:</strong> <span id="profile-email"></span></p>
+      <p><strong>Role:</strong> <span id="profile-role"></span></p>
+      <button id="edit-profile-btn" class="btn btn-primary mt-2">Edit Profile</button>
+    </div>
+    <form id="profile-edit-form" style="display:none">
+      <div class="mb-2">
+        <label>Name:</label>
+        <input type="text" id="edit-profile-name" class="form-control">
+      </div>
+      <div class="mb-2">
+        <label>Email:</label>
+        <input type="email" id="edit-profile-email" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-success">Save Changes</button>
+      <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
+    </form>
+    <a href="#dashboard" class="btn btn-outline-primary mt-2">Back to Dashboard</a>
+    <button class="btn btn-secondary logout-link mt-3">Logout</button>
+  </div>
+</section>

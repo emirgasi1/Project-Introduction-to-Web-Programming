@@ -14,8 +14,18 @@ require_once __DIR__ . '/../services/UserService.php';
  * )
  */
 Flight::route('GET /users', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $service = new UserService($GLOBALS['db']);
-    Flight::json($service->getAll());
+    $users = $service->getAll();
+
+    foreach ($users as &$user) {
+        unset($user['password_hash']);
+    }
+
+    Flight::json($users);
 });
 
 /**
@@ -36,10 +46,20 @@ Flight::route('GET /users', function() {
  * )
  */
 Flight::route('GET /users/@id', function($id) {
-    $service = new UserService($GLOBALS['db']);
-    Flight::json($service->getById($id));
-});
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    $user = Flight::get('user');
 
+    if ($user->user->role !== 'admin' && (int)$user->user->user_id !== (int)$id) {
+        throw new Exception('Access denied: not allowed to view this user', 403);
+    }
+
+    $service = new UserService($GLOBALS['db']);
+    $result = $service->getById($id);
+    if (!$result) throw new Exception("User not found.", 404);
+    unset($result['password_hash']);
+    Flight::json($result);
+});
 /**
  * @OA\Post(
  *     path="/users",
@@ -62,9 +82,14 @@ Flight::route('GET /users/@id', function($id) {
  * )
  */
 Flight::route('POST /users', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $data = Flight::request()->data->getData();
     $service = new UserService($GLOBALS['db']);
-    Flight::json($service->create($data));
+    $id = $service->create($data);
+    Flight::json(['user_id' => $id]);
 });
 
 /**
@@ -94,9 +119,19 @@ Flight::route('POST /users', function() {
  * )
  */
 Flight::route('PUT /users/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    $user = Flight::get('user');
+
+    if ($user->user->role !== 'admin' && (int)$user->user->user_id !== (int)$id) {
+        throw new Exception('Access denied: not allowed to update this user', 403);
+    }
+
     $data = Flight::request()->data->getData();
     $service = new UserService($GLOBALS['db']);
-    Flight::json($service->update($id, $data));
+    $updated = $service->update($id, $data);
+    if (!$updated) throw new Exception("User not found.", 404);
+    Flight::json(['updated' => true]);
 });
 
 /**
@@ -117,6 +152,12 @@ Flight::route('PUT /users/@id', function($id) {
  * )
  */
 Flight::route('DELETE /users/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $service = new UserService($GLOBALS['db']);
-    Flight::json($service->delete($id));
+    $deleted = $service->delete($id);
+    if (!$deleted) throw new Exception("User not found.", 404);
+    Flight::json(['deleted' => true]);
 });

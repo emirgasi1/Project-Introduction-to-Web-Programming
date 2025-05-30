@@ -1,0 +1,31 @@
+<section class="dashboard-section">
+  <div class="dashboard-container">
+    <!-- Dobrodošlica -->
+    <h1 id="welcome-message"></h1>
+    <div class="dashboard-user-info mb-3">
+      <p><strong>Email:</strong> <span id="user-email"></span></p>
+      <p><strong>Role:</strong> <span id="user-role"></span></p>
+    </div>
+    <hr>
+
+    <!-- Brzi pregled narudžbi -->
+    <h3 class="section-title">Recent Orders</h3>
+    <div id="order-history" class="mb-3">
+      <p class="text-muted">No orders yet. <a href="#menu" class="text-primary">Order now!</a></p>
+      <!-- Ovdje možeš JS-om ubacivati narudžbe iz baze -->
+    </div>
+    <div class="dashboard-actions mb-4">
+      <a href="#menu" class="btn btn-primary me-2">Order Now</a>
+      <a href="#profile" class="btn btn-outline-secondary">View Profile</a>
+    </div>
+
+    <!-- Promo sekcija skroz dole -->
+    <div class="dashboard-promo shadow rounded text-center">
+      <h4 class="promo-title">Special Promotion!</h4>
+      <p class="promo-text">🍔 Try our <strong>new Spicy Chicken Sandwich</strong> and get <strong>20% off</strong> your next order!</p>
+      <a href="#menu" class="btn btn-warning promo-btn">Check Out The Menu</a>
+    </div>
+
+    <button class="btn btn-secondary logout-link mt-5">Logout</button>
+  </div>
+</section>

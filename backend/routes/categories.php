@@ -1,6 +1,8 @@
 <?php
+
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../services/CategoryService.php';
+require_once __DIR__ . '/../middleware/RequestValidationMiddleware.php';
 
 /**
  * @OA\Get(
@@ -11,6 +13,11 @@ require_once __DIR__ . '/../services/CategoryService.php';
  * )
  */
 Flight::route('GET /categories', function() {
+    // Provjeri token i autorizaciju
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles(['admin', 'customer']); // Oba mogu pristupiti
+
     $db = Flight::get('db');
     $service = new CategoryService($db);
     Flight::json($service->getAll());
@@ -27,13 +34,16 @@ Flight::route('GET /categories', function() {
  * )
  */
 Flight::route('GET /categories/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles(['admin', 'customer']);
+
     $db = Flight::get('db');
     $service = new CategoryService($db);
     $cat = $service->getById((int)$id);
-    if (!$cat) Flight::halt(404, "Category not found.");
+    if (!$cat) throw new Exception("Category not found.", 404);
     Flight::json($cat);
 });
-
 /**
  * @OA\Post(
  *     path="/categories",
@@ -47,6 +57,10 @@ Flight::route('GET /categories/@id', function($id) {
  * )
  */
 Flight::route('POST /categories', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole('admin'); // Samo admin može kreirati
+
     $db = Flight::get('db');
     $data = Flight::request()->data->getData();
     $service = new CategoryService($db);
@@ -64,12 +78,17 @@ Flight::route('POST /categories', function() {
  *     @OA\Response(response=200, description="Category updated")
  * )
  */
+
 Flight::route('PUT /categories/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $db = Flight::get('db');
     $data = Flight::request()->data->getData();
     $service = new CategoryService($db);
     $updated = $service->update((int)$id, $data);
-    if (!$updated) Flight::halt(404, "Category not found.");
+    if (!$updated) throw new Exception("Category not found.", 404);
     Flight::json(['updated' => true]);
 });
 
@@ -83,9 +102,13 @@ Flight::route('PUT /categories/@id', function($id) {
  * )
  */
 Flight::route('DELETE /categories/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole('admin');
+
     $db = Flight::get('db');
     $service = new CategoryService($db);
     $deleted = $service->delete((int)$id);
-    if (!$deleted) Flight::halt(404, "Category not found.");
+    if (!$deleted) throw new Exception("Category not found.", 404);
     Flight::json(['deleted' => true]);
 });

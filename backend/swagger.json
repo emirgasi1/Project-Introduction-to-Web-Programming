@@ -1,390 +1,180 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-      "title": "Sandwich Station API",
-      "description": "API documentation for the Sandwich Station project",
-      "version": "1.0.0"
-    },
-    "servers": [
-      {
-        "url": "http://localhost/EmirGasi/Project-Introduction-to-Web-Programming/backend"
+ "openapi": "3.0.1",
+  "info": {
+    "title": "Sandwich Station API",
+    "description": "API documentation for the Sandwich Station project",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost/EmirGasi/Project-Introduction-to-Web-Programming/backend"
+    }
+  ],
+  "security": [
+    {
+      "Authentication": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "new_user" },
+                  "email": { "type": "string", "example": "new_user@example.com" },
+                  "password": { "type": "string", "example": "userpassword" },
+                  "role": { "type": "string", "example": "customer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created successfully" }
+        }
       }
-    ],
-    "paths": {
-      "/categories": {
-        "get": {
-          "summary": "Get all categories",
-          "tags": ["Categories"],
-          "responses": {
-            "200": {
-              "description": "List of all categories"
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login a user",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "new_user@example.com" },
+                  "password": { "type": "string", "example": "userpassword" }
+                }
+              }
             }
           }
         },
-        "post": {
-          "summary": "Create a new category",
-          "tags": ["Categories"],
-          "requestBody": {
-            "required": true,
+        "responses": {
+          "200": {
+            "description": "Login successful",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "category_name": {
-                      "type": "string"
-                    }
+                    "token": { "type": "string", "example": "your_jwt_token_here" }
                   }
                 }
               }
             }
-          },
-          "responses": {
-            "200": {
-              "description": "Category created"
-            }
           }
         }
-      },
-      "/categories/{id}": {
-        "get": {
-          "summary": "Get a category by ID",
-          "tags": ["Categories"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Category data"
-            }
-          }
-        },
-        "put": {
-          "summary": "Update category by ID",
-          "tags": ["Categories"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "category_name": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Category updated"
-            }
-          }
-        },
-        "delete": {
-          "summary": "Delete category by ID",
-          "tags": ["Categories"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Category deleted"
-            }
-          }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Get all categories",
+        "tags": ["Categories"],
+        "security": [{ "Authentication": [] }],
+        "responses": {
+          "200": { "description": "List of all categories" }
         }
       },
-      "/orders": {
-        "get": {
-          "summary": "Get all orders",
-          "tags": ["Orders"],
-          "responses": {
-            "200": {
-              "description": "List of all orders"
+      "post": {
+        "summary": "Create a new category",
+        "tags": ["Categories"],
+        "security": [{ "Authentication": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": { "category_name": { "type": "string" } }
+              }
             }
           }
         },
-        "post": {
-          "summary": "Create a new order",
-          "tags": ["Orders"],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user_id": {
-                      "type": "integer"
-                    },
-                    "total_price": {
-                      "type": "number",
-                      "format": "float"
-                    },
-                    "status": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Order created"
-            }
-          }
-        }
+        "responses": { "200": { "description": "Category created" } }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Get a category by ID",
+        "tags": ["Categories"],
+        "security": [{ "Authentication": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Category data" } }
       },
-      "/orders/{id}": {
-        "get": {
-          "summary": "Get an order by ID",
-          "tags": ["Orders"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
+      "put": {
+        "summary": "Update category by ID",
+        "tags": ["Categories"],
+        "security": [{ "Authentication": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
               "schema": {
-                "type": "integer"
+                "type": "object",
+                "properties": { "category_name": { "type": "string" } }
               }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Order data"
             }
           }
         },
-        "put": {
-          "summary": "Update order by ID",
-          "tags": ["Orders"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user_id": {
-                      "type": "integer"
-                    },
-                    "total_price": {
-                      "type": "number",
-                      "format": "float"
-                    },
-                    "status": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Order updated"
-            }
-          }
-        },
-        "delete": {
-          "summary": "Delete order by ID",
-          "tags": ["Orders"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Order deleted"
-            }
-          }
-        }
+        "responses": { "200": { "description": "Category updated" } }
       },
-      "/order-items": {
-        "get": {
-          "summary": "Get all order items",
-          "tags": ["Order Items"],
-          "responses": {
-            "200": {
-              "description": "List of all order items"
-            }
-          }
-        },
-        "post": {
-          "summary": "Create a new order item",
-          "tags": ["Order Items"],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "order_id": {
-                      "type": "integer"
-                    },
-                    "product_id": {
-                      "type": "integer"
-                    },
-                    "quantity": {
-                      "type": "integer"
-                    },
-                    "price": {
-                      "type": "number",
-                      "format": "float"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Order item created"
-            }
-          }
-        }
-      },
-      "/order-items/{id}": {
-        "get": {
-          "summary": "Get an order item by ID",
-          "tags": ["Order Items"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Order item data"
-            }
-          }
-        },
-        "put": {
-          "summary": "Update order item by ID",
-          "tags": ["Order Items"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "order_id": {
-                      "type": "integer"
-                    },
-                    "product_id": {
-                      "type": "integer"
-                    },
-                    "quantity": {
-                      "type": "integer"
-                    },
-                    "price": {
-                      "type": "number",
-                      "format": "float"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Order item updated"
-            }
-          }
-        },
-        "delete": {
-          "summary": "Delete order item by ID",
-          "tags": ["Order Items"],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Order item deleted"
-            }
-          }
-        }
-      },
-      "/payments": {
+      "delete": {
+        "summary": "Delete category by ID",
+        "tags": ["Categories"],
+        "security": [{ "Authentication": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Category deleted" } }
+      }
+    },
+   "/orders": {
   "get": {
-    "summary": "Get all payments",
-    "tags": ["Payments"],
+    "summary": "Get all orders",
+    "tags": ["Orders"],
+    "security": [{ "Authentication": [] }],
     "responses": {
       "200": {
-        "description": "List of all payments"
+        "description": "List of all orders",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "order_id": { "type": "integer" },
+                  "user_id": { "type": "integer" },
+                  "total_price": { "type": "number", "format": "float" },
+                  "status": { "type": "string", "enum": ["pending", "completed", "cancelled"] },
+                  "order_date": { "type": "string", "format": "date", "example": "2025-05-23" }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
   "post": {
-    "summary": "Create a new payment",
-    "tags": ["Payments"],
+    "summary": "Create a new order",
+    "tags": ["Orders"],
+    "security": [{ "Authentication": [] }],
     "requestBody": {
       "required": true,
       "content": {
@@ -392,297 +182,583 @@
           "schema": {
             "type": "object",
             "properties": {
-              "order_id": {
-                "type": "integer"
-              },
-              "payment_method": {
-                "type": "string"
-              },
-              "payment_status": {
-                "type": "string"
-              }
-            }
+              "user_id": { "type": "integer" },
+              "total_price": { "type": "number", "format": "float" },
+              "status": { "type": "string", "enum": ["pending", "completed", "cancelled"] },
+              "order_date": { "type": "string", "format": "date", "example": "2025-05-23" }
+            },
+            "required": ["user_id", "total_price", "status"]
           }
         }
       }
     },
     "responses": {
-      "200": {
-        "description": "Payment created"
+      "201": {
+        "description": "Order created",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": { "order_id": { "type": "integer" } }
+            }
+          }
+        }
       }
     }
   }
 },
-"/payments/{id}": {
+"/orders/{id}": {
   "get": {
-    "summary": "Get a payment by ID",
-    "tags": ["Payments"],
+    "summary": "Get an order by ID",
+    "tags": ["Orders"],
+    "security": [{ "Authentication": [] }],
     "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
     ],
     "responses": {
       "200": {
-        "description": "Payment data"
-      }
-    }
-  },
-  "put": {
-    "summary": "Update payment by ID",
-    "tags": ["Payments"],
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "order_id": {
-                "type": "integer"
-              },
-              "payment_method": {
-                "type": "string"
-              },
-              "payment_status": {
-                "type": "string"
+        "description": "Order data",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "order_id": { "type": "integer" },
+                "user_id": { "type": "integer" },
+                "total_price": { "type": "number", "format": "float" },
+                "status": { "type": "string", "enum": ["pending", "completed", "cancelled"] },
+                "order_date": { "type": "string", "format": "date", "example": "2025-05-23" }
               }
             }
           }
         }
       }
-    },
-    "responses": {
-      "200": {
-        "description": "Payment updated"
-      }
-    }
-  },
-  "delete": {
-    "summary": "Delete payment by ID",
-    "tags": ["Payments"],
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Payment deleted"
-      }
     }
   }
-}
 ,
+      "put": {
+        "summary": "Update order by ID",
+        "tags": ["Orders"],
+        "security": [{ "Authentication": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "integer" },
+                  "total_price": { "type": "number", "format": "float" },
+                  "status": { "type": "string", "enum": ["pending", "completed", "cancelled"] },
+                  "order_date": { "type": "string", "format": "date", "example": "2025-05-23" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "updated": { "type": "boolean" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete order by ID",
+        "tags": ["Orders"],
+        "security": [{ "Authentication": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "deleted": { "type": "boolean" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    ,
+    "/order-items": {
+      "get": {
+        "summary": "Get all order items",
+        "tags": ["Order Items"],
+        "security": [{ "Authentication": [] }]
+,
+        "responses": {
+          "200": {
+            "description": "List of all order items"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new order item",
+        "tags": ["Order Items"],
+       "security": [{ "Authentication": [] }]
+,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "integer"
+                  },
+                  "product_id": {
+                    "type": "integer"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "float"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order item created"
+          }
+        }
+      }
+    },
+    "/order-items/{id}": {
+      "get": {
+        "summary": "Get an order item by ID",
+        "tags": ["Order Items"],
+"security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order item data"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update order item by ID",
+        "tags": ["Order Items"],
+        "security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "integer"
+                  },
+                  "product_id": {
+                    "type": "integer"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "float"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order item updated"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete order item by ID",
+        "tags": ["Order Items"],
+        "security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order item deleted"
+          }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "summary": "Get all payments",
+        "tags": ["Payments"],
+        "security": [{ "Authentication": [] }]
+,
+        "responses": {
+          "200": {
+            "description": "List of all payments"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new payment",
+        "tags": ["Payments"],
+        "security": [{ "Authentication": [] }]
+,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "integer"
+                  },
+                  "payment_method": {
+                    "type": "string"
+                  },
+                  "payment_status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment created"
+          }
+        }
+      }
+    },
+    "/payments/{id}": {
+      "get": {
+        "summary": "Get a payment by ID",
+        "tags": ["Payments"],
+        "security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment data"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update payment by ID",
+        "tags": ["Payments"],
+       "security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "integer"
+                  },
+                  "payment_method": {
+                    "type": "string"
+                  },
+                  "payment_status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment updated"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete payment by ID",
+        "tags": ["Payments"],
+      "security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment deleted"
+          }
+        }
+      }
+    },
     "/products": {
-  "get": {
-    "summary": "Get all products",
-    "tags": ["Products"],
-    "responses": {
-      "200": {
-        "description": "List of all products"
-      }
-    }
-  },
-  "post": {
-    "summary": "Create a new product",
-    "tags": ["Products"],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "product_name": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "price": {
-                "type": "number",
-                "format": "float"
-              },
-              "category_id": {
-                "type": "integer"
-              },
-              "image_url": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    "responses": {
-      "200": {
-        "description": "Product created"
-      }
-    }
-  }
-},
-"/products/{id}": {
-  "get": {
-    "summary": "Get a product by ID",
-    "tags": ["Products"],
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Product data"
-      }
-    }
-  },
-  "put": {
-    "summary": "Update product by ID",
-    "tags": ["Products"],
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "product_name": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "price": {
-                "type": "number",
-                "format": "float"
-              },
-              "category_id": {
-                "type": "integer"
-              },
-              "image_url": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    "responses": {
-      "200": {
-        "description": "Product updated"
-      }
-    }
-  },
-  "delete": {
-    "summary": "Delete product by ID",
-    "tags": ["Products"],
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Product deleted"
-      }
-    }
-  }
-}
+      "get": {
+        "summary": "Get all products",
+        "tags": ["Products"],
+       "security": [{ "Authentication": [] }]
 ,
-   "/users": {
-  "get": {
-    "summary": "Get all users",
-    "tags": ["Users"],
-    "responses": {
-      "200": {
-        "description": "List of all users"
-      }
-    }
-  },
-  "post": {
-    "summary": "Create a new user",
-    "tags": ["Users"],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
+        "responses": {
+          "200": {
+            "description": "List of all products"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new product",
+        "tags": ["Products"],
+       "security": [{ "Authentication": [] }]
+,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "float"
+                  },
+                  "category_id": {
+                    "type": "integer"
+                  },
+                  "image_url": {
+                    "type": "string"
+                  }
+                }
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product created"
           }
         }
       }
     },
-    "responses": {
-      "200": {
-        "description": "User created"
+    "/products/{id}": {
+      "get": {
+        "summary": "Get a product by ID",
+        "tags": ["Products"],
+      "security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product data"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update product by ID",
+        "tags": ["Products"],
+       "security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "float"
+                  },
+                  "category_id": {
+                    "type": "integer"
+                  },
+                  "image_url": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product updated"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete product by ID",
+        "tags": ["Products"],
+       "security": [{ "Authentication": [] }]
+,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product deleted"
+          }
+        }
+      }
+    },
+  "/users": {
+      "get": {
+        "summary": "Get all users",
+        "tags": ["Users"],
+        "security": [{ "Authentication": [] }],
+        "responses": {
+          "200": {
+            "description": "List of all users"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new user",
+        "tags": ["Users"],
+        "security": [{ "Authentication": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created"
+          }
+        }
       }
     }
-  }
-},
+  ,
 "/users/{id}": {
   "get": {
     "summary": "Get a user by ID",
     "tags": ["Users"],
+    "security": [{ "Authentication": [] }],
     "parameters": [
       {
         "name": "id",
         "in": "path",
         "required": true,
-        "schema": {
-          "type": "integer"
-        }
+        "schema": { "type": "integer" }
       }
     ],
     "responses": {
@@ -694,14 +770,13 @@
   "put": {
     "summary": "Update user by ID",
     "tags": ["Users"],
+    "security": [{ "Authentication": [] }],
     "parameters": [
       {
         "name": "id",
         "in": "path",
         "required": true,
-        "schema": {
-          "type": "integer"
-        }
+        "schema": { "type": "integer" }
       }
     ],
     "requestBody": {
@@ -711,15 +786,9 @@
           "schema": {
             "type": "object",
             "properties": {
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              }
+              "username": { "type": "string" },
+              "email": { "type": "string" },
+              "password": { "type": "string" }
             }
           }
         }
@@ -734,14 +803,13 @@
   "delete": {
     "summary": "Delete user by ID",
     "tags": ["Users"],
+    "security": [{ "Authentication": [] }],
     "parameters": [
       {
         "name": "id",
         "in": "path",
         "required": true,
-        "schema": {
-          "type": "integer"
-        }
+        "schema": { "type": "integer" }
       }
     ],
     "responses": {
@@ -752,6 +820,317 @@
   }
 }
 
+
+
+
+  },"/products": {
+  "get": {
+    "summary": "Get all products",
+    "tags": ["Products"],
+    "security": [{ "Authentication": [] }],
+    "responses": {
+      "200": { "description": "List of all products" }
+    }
+  },
+  "post": {
+    "summary": "Create a new product",
+    "tags": ["Products"],
+    "security": [{ "Authentication": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "product_name": { "type": "string" },
+              "description": { "type": "string" },
+              "price": { "type": "number", "format": "float" },
+              "category_id": { "type": "integer" },
+              "image_url": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "responses": { "201": { "description": "Product created" } }
+  }
+},
+"/products/{id}": {
+  "get": {
+    "summary": "Get a product by ID",
+    "tags": ["Products"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "responses": { "200": { "description": "Product data" } }
+  },
+  "put": {
+    "summary": "Update product by ID",
+    "tags": ["Products"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "product_name": { "type": "string" },
+              "description": { "type": "string" },
+              "price": { "type": "number", "format": "float" },
+              "category_id": { "type": "integer" },
+              "image_url": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "responses": { "200": { "description": "Product updated" } }
+  },
+  "delete": {
+    "summary": "Delete product by ID",
+    "tags": ["Products"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "responses": { "200": { "description": "Product deleted" } }
+  }
+}
+,"/order-items": {
+  "get": {
+    "summary": "Get all order items",
+    "tags": ["Order Items"],
+    "security": [{ "Authentication": [] }],
+    "responses": { "200": { "description": "List of all order items" } }
+  },
+  "post": {
+    "summary": "Create a new order item",
+    "tags": ["Order Items"],
+    "security": [{ "Authentication": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "order_id": { "type": "integer" },
+              "product_id": { "type": "integer" },
+              "quantity": { "type": "integer" },
+              "price": { "type": "number", "format": "float" }
+            }
+          }
+        }
+      }
+    },
+    "responses": { "201": { "description": "Order item created" } }
+  }
+},
+"/order-items/{id}": {
+  "get": {
+    "summary": "Get an order item by ID",
+    "tags": ["Order Items"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "responses": { "200": { "description": "Order item data" } }
+  },
+  "put": {
+    "summary": "Update order item by ID",
+    "tags": ["Order Items"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "order_id": { "type": "integer" },
+              "product_id": { "type": "integer" },
+              "quantity": { "type": "integer" },
+              "price": { "type": "number", "format": "float" }
+            }
+          }
+        }
+      }
+    },
+    "responses": { "200": { "description": "Order item updated" } }
+  },
+  "delete": {
+    "summary": "Delete order item by ID",
+    "tags": ["Order Items"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "responses": { "200": { "description": "Order item deleted" } }
+  }
+}
+,"/payments": {
+  "get": {
+    "summary": "Get all payments",
+    "tags": ["Payments"],
+    "security": [{ "Authentication": [] }],
+    "responses": { "200": { "description": "List of all payments" } }
+  },
+  "post": {
+    "summary": "Create a new payment",
+    "tags": ["Payments"],
+    "security": [{ "Authentication": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "order_id": { "type": "integer" },
+              "payment_method": { "type": "string" },
+              "payment_status": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "responses": { "201": { "description": "Payment created" } }
+  }
+},
+"/payments/{id}": {
+  "get": {
+    "summary": "Get a payment by ID",
+    "tags": ["Payments"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "responses": { "200": { "description": "Payment data" } }
+  },
+  "put": {
+    "summary": "Update payment by ID",
+    "tags": ["Payments"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "order_id": { "type": "integer" },
+              "payment_method": { "type": "string" },
+              "payment_status": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "responses": { "200": { "description": "Payment updated" } }
+  },
+  "delete": {
+    "summary": "Delete payment by ID",
+    "tags": ["Payments"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "responses": { "200": { "description": "Payment deleted" } }
+  }
+}
+,"/users": {
+  "get": {
+    "summary": "Get all users",
+    "tags": ["Users"],
+    "security": [{ "Authentication": [] }],
+    "responses": { "200": { "description": "List of all users" } }
+  },
+  "post": {
+    "summary": "Create a new user",
+    "tags": ["Users"],
+    "security": [{ "Authentication": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "username": { "type": "string" },
+              "email": { "type": "string" },
+              "password": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "responses": { "201": { "description": "User created" } }
+  }
+},
+"/users/{id}": {
+  "get": {
+    "summary": "Get a user by ID",
+    "tags": ["Users"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "responses": { "200": { "description": "User data" } }
+  },
+  "put": {
+    "summary": "Update user by ID",
+    "tags": ["Users"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "username": { "type": "string" },
+              "email": { "type": "string" },
+              "password": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "responses": { "200": { "description": "User updated" } }
+  },
+  "delete": {
+    "summary": "Delete user by ID",
+    "tags": ["Users"],
+    "security": [{ "Authentication": [] }],
+    "parameters": [
+      { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+    ],
+    "responses": { "200": { "description": "User deleted" } }
+  }
+}
+
+
+  },"components": {
+  "securitySchemes": {
+    "Authentication": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authentication"
     }
   }
-  
+}}

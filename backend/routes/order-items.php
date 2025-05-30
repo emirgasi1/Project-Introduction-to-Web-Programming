@@ -1,5 +1,7 @@
 <?php
+require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../services/OrderItemService.php';
+require_once __DIR__ . '/../middleware/RequestValidationMiddleware.php';
 
 /**
  * @OA\Get(
@@ -13,9 +15,18 @@ require_once __DIR__ . '/../services/OrderItemService.php';
  * )
  */
 Flight::route('GET /order-items', function() {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
     $service = new OrderItemService($GLOBALS['db']);
-    Flight::json($service->getAll());
+
+    if ($user['role'] === 'admin') {
+        Flight::json($service->getAll());
+    } else {
+        Flight::json($service->getByUserId($user['user_id']));
+    }
 });
+
 
 /**
  * @OA\Get(
@@ -34,10 +45,22 @@ Flight::route('GET /order-items', function() {
  *     )
  * )
  */
+
 Flight::route('GET /order-items/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
     $service = new OrderItemService($GLOBALS['db']);
-    Flight::json($service->getById($id));
+    $item = $service->getById($id);
+    if (!$item) throw new Exception("Order item not found.", 404);
+
+    if ($user['role'] !== 'admin' && $item['user_id'] !== $user['user_id']) {
+        throw new Exception("Forbidden.", 403);
+    }
+    Flight::json($item);
 });
+
+
 
 /**
  * @OA\Post(
@@ -55,15 +78,25 @@ Flight::route('GET /order-items/@id', function($id) {
  *         )
  *     ),
  *     @OA\Response(
- *         response=200,
+ *         response=201,
  *         description="Order item created"
  *     )
  * )
  */
 Flight::route('POST /order-items', function() {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
+    if ($user['role'] !== 'admin') {
+        throw new Exception("Only admin can add order items directly.", 403);
+    }
+
     $data = Flight::request()->data->getData();
+    RequestValidationMiddleware::validateRequiredFields($data, ['order_id', 'product_id', 'quantity', 'price']);
+
     $service = new OrderItemService($GLOBALS['db']);
-    Flight::json($service->create($data));
+    $id = $service->create($data);
+    Flight::halt(201, json_encode(['order_item_id' => $id]));
 });
 
 /**
@@ -93,9 +126,20 @@ Flight::route('POST /order-items', function() {
  * )
  */
 Flight::route('PUT /order-items/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
+    if ($user['role'] !== 'admin') {
+        throw new Exception("Only admin can update order items directly.", 403);
+    }
+
     $data = Flight::request()->data->getData();
+    RequestValidationMiddleware::validateRequiredFields($data, ['order_id', 'product_id', 'quantity', 'price']);
+
     $service = new OrderItemService($GLOBALS['db']);
-    Flight::json($service->update($id, $data));
+    $updated = $service->update($id, $data);
+    if (!$updated) throw new Exception("Order item not found.", 404);
+    Flight::json(['updated' => true]);
 });
 
 /**
@@ -116,6 +160,15 @@ Flight::route('PUT /order-items/@id', function($id) {
  * )
  */
 Flight::route('DELETE /order-items/@id', function($id) {
+    Flight::auth_middleware()->verifyToken(Flight::request()->getHeader("Authentication"));
+    $user = (array) Flight::get('user')->user;
+
+    if ($user['role'] !== 'admin') {
+        throw new Exception("Only admin can delete order items directly.", 403);
+    }
+
     $service = new OrderItemService($GLOBALS['db']);
-    Flight::json($service->delete($id));
+    $deleted = $service->delete($id);
+    if (!$deleted) throw new Exception("Order item not found.", 404);
+    Flight::json(['deleted' => true]);
 });

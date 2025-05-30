@@ -1,5 +1,4 @@
 <?php
-// backend/services/BaseService.php
 
 abstract class BaseService {
     protected BaseDao $dao;
@@ -17,7 +16,6 @@ abstract class BaseService {
     }
 
     public function create(array $data): int {
-        // DAO create vraća novi ID
         return $this->dao->create($data);
     }
 

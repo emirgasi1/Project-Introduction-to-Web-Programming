@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="../css/contact.css">
   <link rel="stylesheet" href="../css/login.css">
   <link rel="stylesheet" href="../css/signup.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
 
   <!-- FONT ROBOTIC -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,47 +29,49 @@
   <!-- jQuery Library -->
   <!-- jQuery SPAPP Library -->
   <link rel="stylesheet" href="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/css/spapp.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
   
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container">
-        <!-- Ime brenda -->
-        <a class="navbar-brand" href="#home">Sandwich Station</a>
-        <!-- Toggle button za mobilne uređaje -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- Navigacija -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link home-link" href="#home">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#menu">Menu</a></li>
-            <li class="nav-item"><a class="nav-link" href="#order">Order Online</a></li>
-            <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-            <li class="nav-item"><a class="nav-link" href="#login"><i class="fa-solid fa-user"></i>Log In</a></li>
-            <!-- Ikona korpe s dropdown menijem-->
-            <!-- Navbar korpa -->
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown">
-                <i class="fa-solid fa-cart-shopping"></i> <span id="cart-count">(0)</span>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown">
-                <div id="cart-items">
-                  <!-- Proizvodi u korpi će biti prikazani ovdje -->
-                </div>
-                <div class="cart-total">
-                  <h4>Total: <span id="cart-total">$0.00</span></h4>
-                </div>
-              </ul>
-            </li>
-              
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <!-- Ime brenda -->
+    <a class="navbar-brand" href="#home">Sandwich Station</a>
+    <!-- Toggle button za mobilne uređaje -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Navigacija -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#menu">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="#order">Order Online</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        <li class="nav-item login-link"><a class="nav-link" href="#login">Log In</a></li>
+        <li class="nav-item signup-link"><a class="nav-link" href="#signup">Sign Up</a></li>
+        <li class="nav-item dashboard-link" style="display:none;"><a class="nav-link" href="#dashboard">Dashboard</a></li>
+        <li class="nav-item admin-link" style="display:none;"><a class="nav-link" href="#admin">Admin Panel</a></li>
+        <li class="nav-item profile-link" style="display:none;"><a class="nav-link" href="#profile">Profile</a></li>
+        <li class="nav-item logout-link" style="display:none;"><a class="nav-link" href="#">Logout</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-cart-shopping"></i> <span id="cart-count">(0)</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown">
+            <div id="cart-items"></div>
+            <div class="cart-total">
+              <h4>Total: <span id="cart-total">$0.00</span></h4>
+            </div>
           </ul>
-        </div>
-      </div>
-    </nav>
+        </li>
+      </ul>
+
+
+    </div>
+  </div>
+</nav>
+
 
     <!-- Glavni sadržaj -->
     <div class="content">
@@ -79,15 +82,25 @@
         <section id="contact" data-load="contact.html"></section>
         <section id="login" data-load="login.html"></section>
         <section id="signup" data-load="signup.html"></section>
+        <section id="dashboard" data-load="dashboard.html"></section>      
+        <section id="admin" data-load="admin.html"></section>
+        <section id="profile" data-load="profile.html"></section>
       </main>
     </div>
   
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/jquery.spapp.js"></script>
+<script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/utils/constant.js"></script>
+<script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/utils/rest-client.js"></script>
+<script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/custom.js"></script>
+<script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/app.js"></script>
+<script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/admin.js"></script>
+<script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/profile.js"></script>
+<script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/dashboard.js"></script>
 
-  <script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/jquery.spapp.js"></script>
-  <script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/custom.js"></script>
-  <script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/app.js"></script>
-  <script src="/EmirGasi/Project-Introduction-to-Web-Programming/frontend/js/products.js"></script> <!-- Dodano products.js -->
+
+<!-- Dodano products.js -->
 
   <!-- Bootstrap Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

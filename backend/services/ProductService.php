@@ -12,14 +12,17 @@ class ProductService extends BaseService {
         parent::__construct($dao);
     }
 
-    // override create/update da ubaciš dodatne validacije…
     public function create(array $data): int {
-        // validiraj category_id, name, price…
         return parent::create($data);
     }
 
     public function update(int $id, array $data): bool {
-        // validiraj…
         return parent::update($id, $data);
     }
+    public function countProducts(): int {
+    $stmt = $this->db->query("SELECT COUNT(*) as count FROM products");
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return (int)$row['count'];
+}
+
 }

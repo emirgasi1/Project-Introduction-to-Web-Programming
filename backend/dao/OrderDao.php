@@ -10,8 +10,7 @@ class OrderDao extends BaseDAO {
         return 'order_id';
     }
 
-    protected function columns(): array {
-        // ovdje navodimo samo one kolone koje BaseDAO koristi za INSERT/UPDATE
-        return ['user_id', 'total_price', 'status'];
-    }
+   protected function columns(): array {
+    return ['user_id', 'total_price', 'status', 'order_date'];
+}
 }
