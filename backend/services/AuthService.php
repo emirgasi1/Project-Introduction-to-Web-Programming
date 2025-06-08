@@ -18,32 +18,39 @@ class AuthService extends BaseService {
         parent::__construct(new AuthDao(Flight::get('db')));
     }
 
-    // Registracija novog korisnika
-    public function register($entity) {
+public function register($entity) {
+    file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "ULAZ U REGISTER\n", FILE_APPEND);
+
     if (empty($entity['email']) || empty($entity['password'])) {
+        file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "FAIL: Email or password empty\n", FILE_APPEND);
         return ['success' => false, 'error' => 'Email and password are required.'];
     }
 
     $email_exists = $this->auth_dao->get_user_by_email($entity['email']);
     if ($email_exists) {
+        file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "FAIL: Email exists\n", FILE_APPEND);
         return ['success' => false, 'error' => 'Email already registered.'];
     }
 
     $entity['password_hash'] = password_hash($entity['password'], PASSWORD_BCRYPT);
+    file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "HASH OK\n", FILE_APPEND);
 
-    // Dodaj defaultnu rolu ako nije poslana
     if (empty($entity['role'])) {
         $entity['role'] = 'customer';
     }
 
+    file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "PRIJE CREATE\n", FILE_APPEND);
 
     $entity_id = $this->auth_dao->create($entity);
+
+    file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "POSLIJE CREATE\n", FILE_APPEND);
 
     unset($entity['password']);
     $entity['id'] = $entity_id;
 
     return ['success' => true, 'data' => $entity];
 }
+
     // Login korisnika
   public function login($entity) {
     if (empty($entity['email']) || empty($entity['password'])) {
@@ -51,7 +58,9 @@ class AuthService extends BaseService {
     }
 
     // Proveri da li korisnik postoji u bazi
+    file_put_contents('php://stderr', "LOGIN REQUEST: ".print_r($entity,1));
     $user = $this->auth_dao->get_user_by_email($entity['email']);
+    file_put_contents('php://stderr', "DB USER: ".print_r($user,1));
     if (!$user) {
         return ['success' => false, 'error' => 'Invalid username or password.'];
     }

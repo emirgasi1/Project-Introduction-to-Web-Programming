@@ -1,0 +1,30 @@
+ULAZ U REGISTER
+HASH OK
+PRIJE CREATE
+ULAZ U CREATE
+DATA: Array
+(
+    [username] => e
+    [email] => korie@gmail.com
+    [password] => 123
+    [password_hash] => $2y$10$gMAAmmgdFR31JOYGqdsTNOB.uIu6CIPu7IUzx/Mt3r4kh9w04CZu.
+    [role] => customer
+)
+EXECUTE OK
+LAST INSERT ID: 46
+POSLIJE CREATE
+ULAZ U REGISTER
+HASH OK
+PRIJE CREATE
+ULAZ U CREATE
+DATA: Array
+(
+    [username] => nekitest
+    [email] => test@email.com
+    [password] => pass123
+    [password_hash] => $2y$10$PN7jyFvW.O.IxyT74Sj/rOx6JtIQWxqTRF2fHYJJSR2tNJdMblyZ.
+    [role] => customer
+)
+EXECUTE OK
+LAST INSERT ID: 47
+POSLIJE CREATE

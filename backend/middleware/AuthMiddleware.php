@@ -6,6 +6,7 @@ use Firebase\JWT\Key;
 class AuthMiddleware {
 
     public function verifyToken($token) {
+        
         if (!$token) {
             Flight::halt(401, "Missing authentication header");
         }
