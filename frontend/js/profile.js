@@ -14,7 +14,6 @@ function initProfile() {
   $("#profile-display").show();
 
   $(".logout-link").off('click').on("click", function() {
-    localStorage.clear();
     window.location.href = "#login";
   });
 }

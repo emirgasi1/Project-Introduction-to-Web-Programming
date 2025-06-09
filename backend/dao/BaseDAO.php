@@ -36,21 +36,36 @@ abstract class BaseDao {
     }
 
     public function create(array $data): int {
-        $cols = $this->columns();
-        $fields = implode(', ', $cols);
-        $placeholders = implode(', ', array_fill(0, count($cols), '?'));
-        $values = [];
-        foreach ($cols as $col) {
-            if (!array_key_exists($col, $data)) {
-                throw new InvalidArgumentException("Missing required field: $col");
-            }
-            $values[] = $data[$col];
+    file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "ULAZ U CREATE\n", FILE_APPEND);
+
+    $cols = $this->columns();
+    $fields = implode(', ', $cols);
+    $placeholders = implode(', ', array_fill(0, count($cols), '?'));
+    $values = [];
+    foreach ($cols as $col) {
+        if (!array_key_exists($col, $data)) {
+            file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "ENTITY: ".print_r($data, 1), FILE_APPEND);
+            throw new InvalidArgumentException("Missing required field: $col");
         }
-        $sql = "INSERT INTO {$this->tableName()} ($fields) VALUES ($placeholders)";
+        $values[] = $data[$col];
+    }
+    $sql = "INSERT INTO {$this->tableName()} ($fields) VALUES ($placeholders)";
+        file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "DATA: ".print_r($data, 1), FILE_APPEND);
+
+    try {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($values);
-        return (int)$this->db->lastInsertId();
+        file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "EXECUTE OK\n", FILE_APPEND);
+    } catch (Exception $ex) {
+        file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "PDO EXCEPTION: " . $ex->getMessage() . "\n", FILE_APPEND);
+        throw $ex;
     }
+
+    $lastId = (int)$this->db->lastInsertId();
+    file_put_contents('C:\xampps\htdocs\EmirGasi\Project-Introduction-to-Web-Programming\frontend\REGISTER-DEBUG.txt', "LAST INSERT ID: $lastId\n", FILE_APPEND);
+    return $lastId;
+}
+
 
    public function update(int $id, array $data): bool {
     $cols = $this->columns();

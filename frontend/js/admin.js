@@ -1,7 +1,6 @@
 // Kad se promijeni hash (SPA navigacija)
 window.addEventListener("hashchange", function() {
   let page = window.location.hash.substring(1); // uklanja #
-  console.log("Hash changed to:", page);
 
   if (page === "admin") {
     // Pozovi s malim delay-em da budeš siguran da je HTML ubačen
